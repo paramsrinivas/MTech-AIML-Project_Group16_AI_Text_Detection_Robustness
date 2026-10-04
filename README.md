@@ -62,6 +62,25 @@ The saved results can be inspected directly in `results/`. To review the experim
 
 Check each script before rerunning it, since the required inputs and execution options differ by stage.
 
+## Supplementary robustness experiment
+
+The project also includes a separate test of lightweight surface edits in
+`results/robustness_condition_metrics.csv`. In this experiment, the detector
+was trained on original training passages and evaluated on held-out human
+passages, original AI passages, and edited copies of the AI passages.
+
+| Evaluation group | Passages | Accuracy | AI recall | False-positive rate |
+|---|---:|---:|---:|---:|
+| Original AI | 4,959 | 98.37% | 98.37% | Not applicable |
+| Surface-edited AI | 4,959 | 98.35% | 98.35% | Not applicable |
+| Human | 10,198 | 99.26% | Not applicable | 0.74% |
+
+These are class-specific groups, not three balanced evaluations containing
+both human and AI passages. Consequently, metrics such as false-positive
+rate for AI-only groups and AI recall for the human-only group are not
+meaningful in this table. These results should not be compared directly
+with the main paired evaluation above.
+
 ## Limitations
 
 The evaluation covers one dataset, one classical classifier, and the text produced by the paraphrasing process used in this project. Manual inspection found some paraphrases that changed facts or omitted information. Therefore, the results measure performance on these generated outputs, not only on meaning-preserving paraphrases.

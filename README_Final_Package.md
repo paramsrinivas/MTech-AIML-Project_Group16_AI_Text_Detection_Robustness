@@ -37,6 +37,23 @@ The experiment and evaluation scripts are in `src/`. Check `requirements.txt` fo
 
 The notebook demonstrates dataset checks and a baseline model using sample data. It is not the source of the final reported metrics.
 
+## Supplementary robustness experiment
+
+A separate surface-edit test is reported in
+`results/robustness_condition_metrics.csv`. It evaluates held-out human
+passages, original AI passages, and lightly edited copies of AI passages
+as separate groups.
+
+| Evaluation group | Passages | Accuracy | AI recall | False-positive rate |
+|---|---:|---:|---:|---:|
+| Original AI | 4,959 | 98.37% | 98.37% | Not applicable |
+| Surface-edited AI | 4,959 | 98.35% | 98.35% | Not applicable |
+| Human | 10,198 | 99.26% | Not applicable | 0.74% |
+
+Because these groups contain only one class each, this table is not a
+balanced human-versus-AI comparison. Read it separately from the main
+paired evaluation; the two tables use different evaluation setups.
+
 ## Limitations
 
 Some generated paraphrases changed facts or left out information. The results therefore reflect the paraphrasing process used in this project; they do not isolate meaning-preserving paraphrasing alone.
