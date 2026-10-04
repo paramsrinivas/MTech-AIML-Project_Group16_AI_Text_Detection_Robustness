@@ -1,0 +1,13 @@
+{
+  "dataset": "Hello-SimpleAI/HC3",
+  "input_file": "data/hc3_original.csv",
+  "random_state": 42,
+  "test_size": 0.2,
+  "split_method": "GroupShuffleSplit by topic_id",
+  "train_rows": 60955,
+  "test_rows": 15157,
+  "train_questions": 17528,
+  "test_questions": 4383,
+  "overlapping_question_ids": 0,
+  "matched_question_count": 21911
+}

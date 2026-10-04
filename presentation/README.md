@@ -1,0 +1,1 @@
+Create the required 8–10 slide PowerPoint after running the validated experiment. Suggested slides: title/team; real-world problem; research question/hypotheses; dataset/provenance; methodology; experimental setup; results; failure cases; limitations; conclusion/future work. Populate results only from results/results.csv.

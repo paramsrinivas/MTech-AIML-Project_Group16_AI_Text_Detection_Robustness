@@ -1,0 +1,97 @@
+{
+  "model": "TF-IDF word unigrams/bigrams + LinearSVC",
+  "training_passages": 60955,
+  "training_questions": 17528,
+  "held_out_questions": 4383,
+  "paired_evaluation_questions": 300,
+  "human_and_ai_passages_per_condition": 600,
+  "train_test_question_overlap": 0,
+  "conditions": {
+    "Original AI": "ai_original",
+    "Surface-edited AI": "ai_surface_edited",
+    "Semantic paraphrase": "ai_paraphrased"
+  },
+  "confusion_matrices": {
+    "Original AI": [
+      [
+        299,
+        1
+      ],
+      [
+        6,
+        294
+      ]
+    ],
+    "Surface-edited AI": [
+      [
+        299,
+        1
+      ],
+      [
+        6,
+        294
+      ]
+    ],
+    "Semantic paraphrase": [
+      [
+        299,
+        1
+      ],
+      [
+        61,
+        239
+      ]
+    ]
+  },
+  "metrics": [
+    {
+      "accuracy": 0.9883333333333333,
+      "ai_precision": 0.9966101694915255,
+      "ai_recall": 0.98,
+      "ai_f1": 0.9882352941176471,
+      "false_positive_rate": 0.0033333333333333335,
+      "TN": 299,
+      "FP": 1,
+      "FN": 6,
+      "TP": 294,
+      "condition": "Original AI",
+      "n_passages": 600,
+      "n_human": 300,
+      "n_ai": 300,
+      "n_questions": 300
+    },
+    {
+      "accuracy": 0.9883333333333333,
+      "ai_precision": 0.9966101694915255,
+      "ai_recall": 0.98,
+      "ai_f1": 0.9882352941176471,
+      "false_positive_rate": 0.0033333333333333335,
+      "TN": 299,
+      "FP": 1,
+      "FN": 6,
+      "TP": 294,
+      "condition": "Surface-edited AI",
+      "n_passages": 600,
+      "n_human": 300,
+      "n_ai": 300,
+      "n_questions": 300
+    },
+    {
+      "accuracy": 0.8966666666666666,
+      "ai_precision": 0.9958333333333333,
+      "ai_recall": 0.7966666666666666,
+      "ai_f1": 0.8851851851851852,
+      "false_positive_rate": 0.0033333333333333335,
+      "TN": 299,
+      "FP": 1,
+      "FN": 61,
+      "TP": 239,
+      "condition": "Semantic paraphrase",
+      "n_passages": 600,
+      "n_human": 300,
+      "n_ai": 300,
+      "n_questions": 300
+    }
+  ],
+  "note": "Semantic paraphrases are raw model outputs and may contain meaning changes or factual errors; interpret that condition as robustness to generated paraphrases, not verified meaning-preserving paraphrases."
+}
