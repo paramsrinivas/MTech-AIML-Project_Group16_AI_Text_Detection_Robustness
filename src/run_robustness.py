@@ -310,23 +310,46 @@ def main():
     with open(RESULTS_DIR / "robustness_summary.json", "w") as file:
         json.dump(summary, file, indent=2)
 
-    # Figure 1: condition metrics.
-    plot_metrics = metrics_df.set_index("condition")[
-        ["accuracy", "precision_ai", "recall_ai", "f1_ai"]
+    # Figure 1: report metrics appropriate to each class-specific subset.
+    human_rows = metrics_df[metrics_df["condition"] == "human"]
+    ai_rows = metrics_df[
+        metrics_df["condition"].isin(["ai_original", "ai_edited_surface"])
     ]
-    ax = plot_metrics.plot(kind="bar", figsize=(11, 6), ylim=(0, 1))
-    ax.set_title("Linear SVC Performance by Evaluation Condition")
-    ax.set_ylabel("Score")
-    ax.set_xlabel("Evaluation condition")
-    ax.tick_params(axis="x", rotation=15)
-    ax.grid(axis="y", alpha=0.25)
-    plt.tight_layout()
-    plt.savefig(
+
+    figure, axes = plt.subplots(1, 2, figsize=(11, 5))
+
+    if not human_rows.empty:
+        axes[0].bar(
+            ["Human passages"],
+            human_rows["false_positive_rate"].fillna(0),
+        )
+    axes[0].set_title("Human False-Positive Rate")
+    axes[0].set_ylabel("Fraction incorrectly predicted as AI")
+    axes[0].set_ylim(0, 1)
+    axes[0].grid(axis="y", alpha=0.25)
+
+    if not ai_rows.empty:
+        axes[1].bar(
+            ai_rows["condition"].map({
+                "ai_original": "Original AI",
+                "ai_edited_surface": "Surface-edited AI",
+            }),
+            ai_rows["recall_ai"],
+        )
+    axes[1].set_title("AI Detection Rate")
+    axes[1].set_ylabel("Fraction correctly predicted as AI")
+    axes[1].set_ylim(0, 1)
+    axes[1].tick_params(axis="x", rotation=10)
+    axes[1].grid(axis="y", alpha=0.25)
+
+    figure.suptitle("LinearSVC Robustness to Surface Edits")
+    figure.tight_layout()
+    figure.savefig(
         FIGURES_DIR / "robustness_condition_metrics.png",
         dpi=200,
         bbox_inches="tight",
     )
-    plt.close()
+    plt.close(figure)
 
     # Figure 2: AI detection rate before and after edits.
     rates = pd.Series({
