@@ -1,32 +1,51 @@
-# Data collection and schema
+# Data Collection and Schema
 
-## Do not use the demo file as research evidence
-`sample_data.csv` exists only to verify that the pipeline loads and validates data. It is not a valid human-vs-AI benchmark and must not be used to report accuracy or other results.
+## About the data
 
-## Recommended manageable dataset
-Start with 12–20 topics and aim for at least:
-- 1–2 human passages per topic;
-- 1–2 original AI passages per topic;
-- 1 edited version for each original AI passage.
+We use `sample_data.csv` only to check whether the code can load and validate the data. It is a sample file, so we do not use it for model training or for reporting the final results.
 
-A larger set of topics is preferable to many near-duplicate passages from only a few topics. Treat these numbers as a starting target, not a guarantee of statistical power.
+## How we plan to collect the data
 
-## Human passage sourcing
-Use short passages written by consenting participants specifically for this study, or text from a source whose license and provenance permit the intended use. Record the source, date, and consent/license basis. Do not label text as human-written unless its provenance supports that label.
+We aim to cover around 12–20 topics in the dataset. For each topic, we will try to collect 1–2 human-written passages and 1–2 original AI-generated passages. We will also prepare an edited version of each AI passage.
 
-## AI passage protocol
-Use the same documented prompt template across topics, for example:
-> Write one factual explanatory passage of 120–180 words about [TOPIC] for a general university audience. Use a neutral tone, avoid headings and bullet points, and do not mention that you are an AI.
+These numbers are only an initial target. We would rather have passages covering different topics than collect many passages that say almost the same thing.
 
-Record model/provider and date. If comparing different AI systems, record the generator and report this as a separate analysis.
+## Human-written text
 
-## Editing protocol
-Create one lightly edited/paraphrased version per AI passage. Define editing rules before editing, for example: preserve facts and meaning, change some sentence structures and wording, do not add new evidence, and target moderate rather than complete rewriting. Record whether editing was human-assisted or model-assisted. Do not mix editing methods without recording them.
+For the human-written part, we will use text from participants who agree to take part in the study, or from sources that allow us to use their text. We will keep a record of the source, collection date, and any relevant consent or licence details.
 
-## Required columns
+We will label a passage as human-written only when we have a reasonable basis for confirming where it came from.
+
+## AI-generated text
+
+To keep the collection process consistent, we will use the same prompt format for each topic. For example:
+
+> Write a factual explanatory passage of 120–180 words about [TOPIC] for a general university audience. Use a neutral tone, avoid headings and bullet points, and do not mention that you are an AI.
+
+We will record which model or provider generated each passage and when it was created. If we use more than one AI system, we will keep track of which system produced each passage so the results can be compared properly.
+
+## Edited passages
+
+We will make one lightly edited or paraphrased version of each original AI passage. The aim is to change some wording and sentence structure without changing the original meaning or adding new facts.
+
+We will also record how each passage was edited, such as whether the changes were made manually or with AI assistance. If we use different editing methods, we will document them rather than treating them all as the same process.
+
+## CSV format
+
+Each row in the dataset will represent one passage. The CSV file will contain these columns:
+
 `passage_id, topic_id, condition, label, text, parent_id, provenance, generator, edit_method`
 
-- `condition`: `human`, `ai_original`, or `ai_edited`
-- `label`: `0` human; `1` AI-origin (including edited AI)
-- `parent_id`: original AI passage ID for edited versions
-- Keep all versions from a topic in the same train/test partition.
+The columns are used as follows:
+
+- `passage_id`: ID assigned to each passage.
+- `topic_id`: Topic covered by the passage.
+- `condition`: Whether the passage is `human`, `ai_original`, or `ai_edited`.
+- `label`: `0` for human-written text and `1` for AI-origin text, including edited AI passages.
+- `text`: Actual passage content.
+- `parent_id`: ID of the original AI passage linked to an edited version.
+- `provenance`: Where the passage came from and its source details.
+- `generator`: AI model or provider used, where applicable.
+- `edit_method`: How the passage was edited, where applicable.
+
+When we split the data for training and testing, passages from the same topic will stay in the same split. This helps prevent closely related passages from appearing in both sets and giving us an overly optimistic evaluation.
