@@ -1,96 +1,75 @@
-# Assignment 16 — AI-Generated Text Detection Under Light Editing
+# AI Text Detection Robustness
 
 **Course:** AI26501 Modern AI Assignments (SP-2026)  
-**Project:** Human vs AI-generated text detection and robustness to editing  
-**Execution environment:** macOS, CPU-first Python workflow
+**Assignment:** 16 — AI Text Detection Robustness
 
-## Research question
-How does light editing or paraphrasing affect a text classifier's ability to distinguish AI-generated passages from human-written passages?
+## Project overview
 
-## Hypotheses
-- **H1:** A TF-IDF classifier can distinguish original AI passages from human-written passages above a majority-class baseline on held-out topics.
-- **H2:** Detection performance on edited AI passages is lower than on original AI passages.
-- **H3:** A model that looks strong under a random row split may perform worse when entire topics are held out.
+This project tests whether a machine-learning classifier can distinguish human-written passages from AI-generated passages after the wording of the AI text has been changed.
 
-These are hypotheses to test, not assumed results.
+We used the HC3 dataset and evaluated a TF-IDF text representation with a LinearSVC classifier. The evaluation compared original AI text, surface-edited text, and semantically paraphrased text against human-written passages.
 
-## Experimental conditions
-1. `human`: human-written passages.
-2. `ai_original`: AI-generated passages before editing.
-3. `ai_edited`: lightly edited/paraphrased versions of the AI passages.
+The main question was whether changes in wording would affect the classifier's ability to recognize AI-generated text.
 
-For the primary binary classification task, `human` is label `0`; both AI conditions are label `1`. Report original-AI and edited-AI results separately. Do not treat edited AI text as human text.
+## Method
 
-## Data integrity rules
-- The supplied `data/sample_data.csv` is **demo-only** and must not be used to report project results.
-- Real human passages must be written by consenting human contributors or obtained from a clearly documented permitted source. Preserve provenance and any relevant license/consent.
-- Generate AI passages with a documented model/provider, date, and prompt.
-- Edit only AI passages for the edited condition; retain parent IDs to link versions.
-- Match topics and keep passage lengths reasonably comparable.
-- Split by `topic_id` or source/document group, not by individual rows. Related variants must never cross train/test boundaries.
-- Keep a data collection log and do not include personal or confidential information.
+The classifier uses word-level TF-IDF features with a LinearSVC model. The experiment evaluates the same task under three text conditions:
 
-## Repository layout
-```text
-MTech-AIML-Project_Group16_AI_Text_Detection_Robustness/
-├── README.md
-├── requirements.txt
-├── data/
-│   ├── README.md
-│   └── sample_data.csv
-├── notebooks/
-│   └── experiment.ipynb
-├── src/
-│   ├── preprocessing.py
-│   ├── model.py
-│   └── evaluation.py
-├── results/
-│   ├── results.csv
-│   ├── comparison_table.csv
-│   └── figures/
-└── presentation/
-    └── Group16_AI_Text_Detection_Robustness.pptx  # add after real experiments
-```
+- **Original:** AI-generated passages in their original form.
+- **Surface-edited:** AI passages with surface-level changes.
+- **Semantic paraphrase:** AI passages rewritten by a paraphrasing process.
 
-## macOS setup
+The model was trained on the original training data. The held-out evaluation used 300 question pairs, with 300 human passages and 300 AI passages per condition.
+
+The evaluation reports accuracy, AI precision, AI recall, F1 score, false-positive rate, and confusion matrices.
+
+## Results
+
+| Metric | Original AI | Surface-edited | Semantic paraphrase |
+|---|---:|---:|---:|
+| Accuracy | 98.83% | 98.83% | 89.67% |
+| AI precision | 99.66% | 99.66% | 99.58% |
+| AI recall | 98.00% | 98.00% | 79.67% |
+| AI F1 score | 98.82% | 98.82% | 88.52% |
+| False-positive rate | 0.33% | 0.33% | 0.33% |
+
+AI recall decreased by 18.33 percentage points after semantic paraphrasing. The number of AI passages classified as human increased from 6 to 61.
+
+These results suggest that semantic rewriting affected this classifier more than the surface edits used in this experiment. They do not establish that all AI detectors behave the same way.
+
+## Repository structure
+
+- `data/` — HC3 dataset files and data notes.
+- `notebooks/` — experiment notebook.
+- `src/` — data preparation, model, evaluation, and robustness scripts.
+- `results/` — predictions, metrics, summaries, and figures.
+- `reports/` — final written report.
+- `presentation/` — final presentation slides.
+- `requirements.txt` — Python dependencies.
+
+## Environment setup
+
+The project was developed on macOS using Python. To create a fresh environment and install the listed dependencies:
+
 ```bash
-cd MTech-AIML-Project_Group16_AI_Text_Detection_Robustness
-python3 --version
 python3 -m venv .venv
 source .venv/bin/activate
 python -m pip install --upgrade pip
 pip install -r requirements.txt
-python -m jupyter notebook
 ```
 
-Open `notebooks/experiment.ipynb`. To run the core experiment as a script:
-```bash
-python -m src.model --data data/your_dataset.csv --out results
-```
+The saved results can be inspected directly in `results/`. To review the experiment implementation, start with `src/prepare_hc3.py`, `src/model.py`, `src/run_experiment.py`, `src/run_robustness.py`, and `src/evaluate_final.py`.
 
-## Required dataset schema
-One row per passage/version:
-- `passage_id`: unique row ID
-- `topic_id`: topic grouping used for group-wise split
-- `condition`: `human`, `ai_original`, or `ai_edited`
-- `label`: `0` for human, `1` for AI-origin
-- `text`: passage text
-- `parent_id`: original passage ID for edited versions; blank for original rows
-- `provenance`: how the passage was obtained
-- `generator`: AI model/provider for AI rows; blank for human rows
-- `edit_method`: editing protocol for edited AI rows; blank otherwise
+Check each script before rerunning it, since the required inputs and execution options differ by stage.
 
-## Analysis protocol
-- Primary split: group-wise 80/20 split by `topic_id`, with a fixed random seed. If the number of topics is too small for a stable holdout, collect more topics rather than silently switching to row-wise splitting.
-- Models: TF-IDF word n-grams + Logistic Regression; TF-IDF word n-grams + Linear SVM.
-- Fit all vectorizers and models on training data only.
-- Evaluate on (a) human vs original AI and (b) human vs edited AI, using the same held-out topics.
-- Metrics: accuracy, precision, recall, F1, false-positive rate, confusion matrix, and performance drop from original to edited AI.
-- Add confidence intervals or repeated group splits if the dataset size permits.
-- Save exact split IDs, predictions, model settings, package versions, and random seeds.
+## Limitations
 
-## Important limitations
-AI-text detectors are not reliable proof of authorship. Results may depend on model family, topic, language, passage length, editing method, and source distribution. Do not claim universal detection ability from a small dataset. Avoid using detector scores for high-stakes judgments about individuals.
+The evaluation covers one dataset, one classical classifier, and the text produced by the paraphrasing process used in this project. Manual inspection found some paraphrases that changed facts or omitted information. Therefore, the results measure performance on these generated outputs, not only on meaning-preserving paraphrases.
 
-## Deliverables
-Fill `results/results.csv`, `results/comparison_table.csv`, and `results/figures/` only after running the experiment on validated research data. Prepare the 8–10 slide presentation from actual results; do not invent metrics.
+AI-text detectors can produce both false positives and false negatives. Their predictions should not be treated as proof of authorship.
+
+## Main deliverables
+
+- `reports/Assignment16_Final_Report.docx`
+- `presentation/Group16_AI_Text_Detection_Robustness.pptx`
+- Evaluation tables and figures under `results/`

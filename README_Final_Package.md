@@ -1,23 +1,30 @@
-# Assignment 16 — AI Text Detection Robustness
+# Assignment 16 — Final Package
+
+This folder documents the final deliverables for the AI Text Detection Robustness project.
 
 ## Deliverables
-- `Group16_AI_Text_Detection_Robustness.pptx` — 10-slide presentation
-- `Assignment16_Final_Report.docx` — written report (to be generated in the next step)
-- `figures/` — charts used in the presentation/report
 
-## Main results
-Controlled paired evaluation: 300 held-out question pairs, 600 passages per condition.
-- Original AI: accuracy 98.83%, AI recall 98.00%, AI F1 98.82%, FPR 0.33%
-- Surface-edited AI: same reported aggregate metrics as original
-- Semantic paraphrase: accuracy 89.67%, AI recall 79.67%, AI F1 88.52%, FPR 0.33%
+- `reports/Assignment16_Final_Report.docx` — written report.
+- `presentation/Group16_AI_Text_Detection_Robustness.pptx` — 10-slide presentation.
+- `results/` — evaluation metrics, predictions, summaries, and figures.
+- `src/` — scripts used for data preparation, experiments, and evaluation.
+- `data/` — dataset files and data documentation.
 
-AI recall fell by 18.33 percentage points after semantic paraphrasing; false negatives rose from 6 to 61.
+## Main findings
 
-## Caveat
-Manual inspection found paraphrases that changed facts or omitted information. The paraphrase results measure robustness to this paraphraser's outputs, not exclusively meaning-preserving paraphrases.
+The evaluation covered 300 held-out question pairs, with 300 human and 300 AI passages per condition.
 
-## Before submission
-1. Add team member names.
-2. Confirm README and requirements reflect final scripts/dependencies.
-3. Retain source code, result CSV/JSON, figures, and data preparation instructions.
-4. Verify slides render and rehearse for approximately 20 minutes.
+| Metric | Original AI | Surface-edited AI | Semantic paraphrase |
+|---|---:|---:|---:|
+| Accuracy | 98.83% | 98.83% | 89.67% |
+| AI recall | 98.00% | 98.00% | 79.67% |
+| AI F1 score | 98.82% | 98.82% | 88.52% |
+| False-positive rate | 0.33% | 0.33% | 0.33% |
+
+AI recall fell by 18.33 percentage points after semantic paraphrasing, while false negatives increased from 6 to 61.
+
+## Interpretation and limitation
+
+Some generated paraphrases changed facts or omitted information. The results therefore reflect this paraphrasing process and should not be interpreted as a test of meaning-preserving paraphrases alone.
+
+The experiment evaluates one classifier on one dataset. Its findings should not be generalized to every AI detector or writing style.
