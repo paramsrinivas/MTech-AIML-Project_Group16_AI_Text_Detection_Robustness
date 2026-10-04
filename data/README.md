@@ -1,51 +1,51 @@
-# Data Collection and Schema
+# Data Description
 
-## About the data
+## Overview
 
-We use `sample_data.csv` only to check whether the code can load and validate the data. It is a sample file, so we do not use it for model training or for reporting the final results.
+This project studies how well an AI text detector performs when AI-generated passages are modified. The experiments use the English portion of the **HC3 (Human ChatGPT Comparison Corpus)** dataset, which contains questions, human-written answers, and ChatGPT-generated answers.
 
-## How we plan to collect the data
+The dataset is loaded from Hugging Face using `Hello-SimpleAI/HC3`, with the `default` configuration and the `refs/convert/parquet` revision.
 
-We aim to cover around 12–20 topics in the dataset. For each topic, we will try to collect 1–2 human-written passages and 1–2 original AI-generated passages. We will also prepare an edited version of each AI passage.
+## Files
 
-These numbers are only an initial target. We would rather have passages covering different topics than collect many passages that say almost the same thing.
+- `hc3_original.csv` — the prepared dataset containing the original human and AI passages.
+- `sample_data.csv` — a sample dataset used for inspection or testing.
+- `../results/semantic_paraphrases.csv` — generated semantic paraphrases used in the robustness evaluation.
 
-## Human-written text
+The semantic paraphrases are stored under `results/`, rather than in the `data/` directory.
 
-For the human-written part, we will use text from participants who agree to take part in the study, or from sources that allow us to use their text. We will keep a record of the source, collection date, and any relevant consent or licence details.
+## Data Preparation
 
-We will label a passage as human-written only when we have a reasonable basis for confirming where it came from.
+The script `src/prepare_hc3.py` prepares the original HC3 data for the experiments.
 
-## AI-generated text
+During preparation, the script:
 
-To keep the collection process consistent, we will use the same prompt format for each topic. For example:
+- Loads the dataset from Hugging Face.
+- Extracts the question, human answers, ChatGPT answers, and source information.
+- Cleans whitespace while preserving the passage text otherwise.
+- Uses a minimum text length of 40 characters.
+- Assigns label `0` to human-written text and label `1` to original AI-generated text.
+- Uses SHA-256 hashes to support consistent identification of text passages.
 
-> Write a factual explanatory passage of 120–180 words about [TOPIC] for a general university audience. Use a neutral tone, avoid headings and bullet points, and do not mention that you are an AI.
+The prepared data is saved to `data/hc3_original.csv`. Edited and paraphrased passages are generated separately during later experiment stages.
 
-We will record which model or provider generated each passage and when it was created. If we use more than one AI system, we will keep track of which system produced each passage so the results can be compared properly.
+## Text Variations
 
-## Edited passages
+The project evaluates three forms of AI-generated text:
 
-We will make one lightly edited or paraphrased version of each original AI passage. The aim is to change some wording and sentence structure without changing the original meaning or adding new facts.
+1. **Original AI text:** The ChatGPT answers from the prepared HC3 dataset.
+2. **Surface-edited AI text:** The script `src/run_robustness.py` applies simple changes, including whitespace normalization and removal of selected introductory phrases. It does not perform semantic paraphrasing.
+3. **Semantic paraphrases:** The script `src/generate_paraphrases.py` uses the Hugging Face Transformers library and the `humarin/chatgpt_paraphraser_on_T5_base` model to generate alternative versions of selected AI passages.
 
-We will also record how each passage was edited, such as whether the changes were made manually or with AI assistance. If we use different editing methods, we will document them rather than treating them all as the same process.
+The paraphrasing script uses random seed `42`, a test split of `20%`, a sample size of `300`, and a maximum input length of `220` tokens.
 
-## CSV format
+## Evaluation Notes
 
-Each row in the dataset will represent one passage. The CSV file will contain these columns:
+The semantic paraphrases are generated model outputs. They may change the original meaning or introduce factual errors, so they should not be treated as verified, meaning-preserving rewrites.
 
-`passage_id, topic_id, condition, label, text, parent_id, provenance, generator, edit_method`
+The project compares detector performance across the original, surface-edited, and semantically paraphrased conditions. The evaluation scripts and result files contain the corresponding metrics.
 
-The columns are used as follows:
+## Reproducibility
 
-- `passage_id`: ID assigned to each passage.
-- `topic_id`: Topic covered by the passage.
-- `condition`: Whether the passage is `human`, `ai_original`, or `ai_edited`.
-- `label`: `0` for human-written text and `1` for AI-origin text, including edited AI passages.
-- `text`: Actual passage content.
-- `parent_id`: ID of the original AI passage linked to an edited version.
-- `provenance`: Where the passage came from and its source details.
-- `generator`: AI model or provider used, where applicable.
-- `edit_method`: How the passage was edited, where applicable.
+The main preparation and paraphrasing scripts are located in `src/`. The Hugging Face dataset and model are specified in those scripts. The fixed random seed helps make sampling reproducible, although exact generated paraphrases can depend on the software environment and generation settings.
 
-When we split the data for training and testing, passages from the same topic will stay in the same split. This helps prevent closely related passages from appearing in both sets and giving us an overly optimistic evaluation.
