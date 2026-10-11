@@ -33,47 +33,49 @@ RESULTS_DIR.mkdir(parents=True, exist_ok=True)
 FIGURES_DIR.mkdir(parents=True, exist_ok=True)
 
 
+
 def make_light_edit(text):
     """
-    Apply deterministic, surface-level transformations.
-    This is NOT a semantic paraphraser.
-
-    Transformations:
-    - normalize repeated spaces and tabs
-    - remove a small set of common discourse openers
-    - normalize spaces around punctuation
-    - preserve the AI label
+    Apply deterministic, meaning-preserving surface edits.
+    This is not a semantic paraphraser.
     """
     import re
 
-    edited = str(text)
+    original = str(text)
+    edited = original
 
     # Normalize whitespace.
     edited = re.sub(r"[ \t]+", " ", edited)
     edited = re.sub(r" *\n *", "\n", edited)
 
-    # Remove at most one common opening phrase.
-    opening_patterns = [
-        r"^\s*Certainly,\s*",
-        r"^\s*Sure,\s*",
-        r"^\s*Of course,\s*",
-        r"^\s*Here is\s+",
-        r"^\s*Here are\s+",
-        r"^\s*As an AI language model,\s*",
+    # Apply one deterministic phrase substitution where possible.
+    replacements = [
+        (r"\bIn addition,\s*", "Additionally, "),
+        (r"\bAdditionally,\s*", "Also, "),
+        (r"\bFor example,\s*", "For instance, "),
+        (r"\bFor instance,\s*", "For example, "),
+        (r"\bHowever,\s*", "Nevertheless, "),
+        (r"\bTherefore,\s*", "Thus, "),
+        (r"\bIn conclusion,\s*", "To conclude, "),
+        (r"\bOn the other hand,\s*", "Conversely, "),
     ]
 
-    for pattern in opening_patterns:
-        updated = re.sub(pattern, "", edited, count=1, flags=re.IGNORECASE)
+    for pattern, replacement in replacements:
+        updated = re.sub(
+            pattern,
+            replacement,
+            edited,
+            count=1,
+            flags=re.IGNORECASE,
+        )
         if updated != edited:
             edited = updated
             break
 
-    # Remove spaces before common punctuation.
     edited = re.sub(r"\s+([,.!?;:])", r"\1", edited)
-
-    # Avoid returning an empty passage.
     edited = edited.strip()
-    return edited if edited else str(text)
+
+    return edited if edited else original
 
 
 def calculate_metrics(y_true, y_pred):
