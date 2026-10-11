@@ -49,19 +49,68 @@ These results suggest that semantic rewriting affected this classifier more than
 
 ## Environment setup
 
-The project was developed on macOS using Python. To create a fresh environment and install the listed dependencies:
+The project was developed with Python 3.12 on macOS. From the repository root, create and activate a virtual environment and install the dependencies:
 
 ```bash
 python3 -m venv .venv
 source .venv/bin/activate
 python -m pip install --upgrade pip
-pip install -r requirements.txt
+python -m pip install -r requirements.txt
 ```
 
-The saved results can be inspected directly in `results/`. To review the experiment implementation, start with `src/prepare_hc3.py`, `src/model.py`, `src/run_experiment.py`, `src/run_robustness.py`, and `src/evaluate_final.py`.
+### Reproduce the experiments
 
-Check each script before rerunning it, since the required inputs and execution options differ by stage.
+Run the commands from the repository root, in the order shown below.
 
+**1. Prepare the dataset**
+
+```bash
+python src/prepare_hc3.py
+```
+
+This creates `data/hc3_original.csv`. Dataset preparation requires internet access to retrieve the HC3 dataset if it is not already cached.
+
+**2. Run the baseline experiment**
+
+```bash
+python src/run_experiment.py
+```
+
+This trains and evaluates the baseline classifiers and saves their metrics, predictions, split manifest, and figure under `results/`.
+
+**3. Run the surface-edit robustness experiment**
+
+```bash
+python src/run_robustness.py
+```
+
+This evaluates held-out human passages, original AI passages, and surface-edited AI passages.
+
+**4. Generate semantic paraphrases**
+
+```bash
+python src/generate_paraphrases.py
+```
+
+This uses `humarin/chatgpt_paraphraser_on_T5_base` and writes `results/semantic_paraphrases.csv`. The first run requires internet access to download the model and tokenizer. Generation can take substantial time and may require considerable memory.
+
+**5. Evaluate semantic paraphrases**
+
+```bash
+python src/evaluate_final.py
+```
+
+This reconstructs the grouped train/test split, trains the detector on original training text, and evaluates the saved paired sample. It writes the final metrics, predictions, summary, and figures under `results/`.
+
+**Reproduction notes**
+
+- Run commands from the repository root so relative paths resolve correctly.
+- The experiments use a fixed random seed of 42 and group questions by `topic_id` to prevent question overlap between training and test data.
+- The semantic paraphrase evaluation uses a 300-question paired sample. Its results should not be compared directly with the larger supplementary surface-edit evaluation.
+- The paraphrase-generation step is separate from evaluation. If the saved paraphrases already exist, do not rerun generation unnecessarily.
+- Re-running stages may overwrite generated files. Preserve a copy of validated outputs before rerunning experiments.
+
+To inspect the saved results without rerunning the experiments, open the CSV files and figures under `results/`.
 ## Supplementary robustness experiment
 
 The project also includes a separate test of lightweight surface edits in
