@@ -1,1 +1,2 @@
 model,original_ai_f1,edited_ai_f1,f1_drop,original_ai_recall,edited_ai_recall,recall_drop,original_ai_fpr,edited_ai_fpr
+TFIDF_LinearSVC,0.9917657822506862,0.990020366598778,0.001745415651908222,0.9836660617059892,0.9802379511998388,0.003428110506150439,,

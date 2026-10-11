@@ -133,7 +133,7 @@ topic_id,source,original_prediction,edited_prediction,original_detected_as_ai,ed
 600,reddit_eli5,1,1,True,True,False
 603,reddit_eli5,1,1,True,True,False
 604,reddit_eli5,1,1,True,True,False
-605,reddit_eli5,1,1,True,True,False
+605,reddit_eli5,1,0,True,False,True
 610,reddit_eli5,1,1,True,True,False
 615,reddit_eli5,1,1,True,True,False
 616,reddit_eli5,1,1,True,True,False
@@ -159,7 +159,7 @@ topic_id,source,original_prediction,edited_prediction,original_detected_as_ai,ed
 681,reddit_eli5,1,1,True,True,False
 711,reddit_eli5,1,1,True,True,False
 715,reddit_eli5,1,1,True,True,False
-719,reddit_eli5,1,1,True,True,False
+719,reddit_eli5,1,0,True,False,True
 722,reddit_eli5,1,1,True,True,False
 726,reddit_eli5,1,1,True,True,False
 729,reddit_eli5,1,1,True,True,False
@@ -230,7 +230,7 @@ topic_id,source,original_prediction,edited_prediction,original_detected_as_ai,ed
 1073,reddit_eli5,1,1,True,True,False
 1080,reddit_eli5,1,1,True,True,False
 1082,reddit_eli5,1,1,True,True,False
-1086,reddit_eli5,1,1,True,True,False
+1086,reddit_eli5,1,0,True,False,True
 1088,reddit_eli5,1,1,True,True,False
 1091,reddit_eli5,1,1,True,True,False
 1099,reddit_eli5,1,1,True,True,False
@@ -515,10 +515,10 @@ topic_id,source,original_prediction,edited_prediction,original_detected_as_ai,ed
 2671,reddit_eli5,1,1,True,True,False
 2675,reddit_eli5,1,1,True,True,False
 2678,reddit_eli5,1,1,True,True,False
-2684,reddit_eli5,1,1,True,True,False
+2684,reddit_eli5,1,0,True,False,True
 2686,reddit_eli5,1,1,True,True,False
 2687,reddit_eli5,1,1,True,True,False
-2707,reddit_eli5,1,1,True,True,False
+2707,reddit_eli5,1,0,True,False,True
 2711,reddit_eli5,1,1,True,True,False
 2714,reddit_eli5,1,1,True,True,False
 2719,reddit_eli5,1,1,True,True,False
@@ -546,7 +546,7 @@ topic_id,source,original_prediction,edited_prediction,original_detected_as_ai,ed
 2810,reddit_eli5,1,1,True,True,False
 2814,reddit_eli5,1,1,True,True,False
 2817,reddit_eli5,1,1,True,True,False
-2824,reddit_eli5,1,1,True,True,False
+2824,reddit_eli5,1,0,True,False,True
 2827,reddit_eli5,1,1,True,True,False
 2830,reddit_eli5,1,1,True,True,False
 2835,reddit_eli5,1,1,True,True,False
@@ -934,7 +934,7 @@ topic_id,source,original_prediction,edited_prediction,original_detected_as_ai,ed
 4828,reddit_eli5,1,1,True,True,False
 4832,reddit_eli5,1,1,True,True,False
 4833,reddit_eli5,0,0,False,False,False
-4834,reddit_eli5,1,1,True,True,False
+4834,reddit_eli5,1,0,True,False,True
 4847,reddit_eli5,1,1,True,True,False
 4848,reddit_eli5,1,1,True,True,False
 4852,reddit_eli5,1,1,True,True,False
@@ -1362,7 +1362,7 @@ topic_id,source,original_prediction,edited_prediction,original_detected_as_ai,ed
 7033,reddit_eli5,1,1,True,True,False
 7034,reddit_eli5,1,1,True,True,False
 7046,reddit_eli5,1,1,True,True,False
-7052,reddit_eli5,1,1,True,True,False
+7052,reddit_eli5,1,0,True,False,True
 7059,reddit_eli5,1,1,True,True,False
 7066,reddit_eli5,1,1,True,True,False
 7068,reddit_eli5,1,1,True,True,False
@@ -1888,7 +1888,7 @@ topic_id,source,original_prediction,edited_prediction,original_detected_as_ai,ed
 10948,reddit_eli5,1,1,True,True,False
 10954,reddit_eli5,1,1,True,True,False
 10955,reddit_eli5,1,1,True,True,False
-10958,reddit_eli5,1,1,True,True,False
+10958,reddit_eli5,1,0,True,False,True
 10959,reddit_eli5,0,0,False,False,False
 10971,reddit_eli5,1,1,True,True,False
 10974,reddit_eli5,1,1,True,True,False
@@ -2003,7 +2003,7 @@ topic_id,source,original_prediction,edited_prediction,original_detected_as_ai,ed
 11596,reddit_eli5,1,1,True,True,False
 11604,reddit_eli5,1,1,True,True,False
 11606,reddit_eli5,1,1,True,True,False
-11610,reddit_eli5,1,1,True,True,False
+11610,reddit_eli5,1,0,True,False,True
 11614,reddit_eli5,0,0,False,False,False
 11619,reddit_eli5,1,1,True,True,False
 11620,reddit_eli5,1,1,True,True,False
@@ -2443,7 +2443,7 @@ topic_id,source,original_prediction,edited_prediction,original_detected_as_ai,ed
 14720,reddit_eli5,1,1,True,True,False
 14723,reddit_eli5,1,1,True,True,False
 14726,reddit_eli5,1,1,True,True,False
-14729,reddit_eli5,1,1,True,True,False
+14729,reddit_eli5,1,0,True,False,True
 14732,reddit_eli5,1,1,True,True,False
 14733,reddit_eli5,1,1,True,True,False
 14757,reddit_eli5,1,1,True,True,False
@@ -2794,7 +2794,7 @@ topic_id,source,original_prediction,edited_prediction,original_detected_as_ai,ed
 16437,reddit_eli5,1,1,True,True,False
 16451,reddit_eli5,1,1,True,True,False
 16452,reddit_eli5,1,1,True,True,False
-16462,reddit_eli5,1,1,True,True,False
+16462,reddit_eli5,1,0,True,False,True
 16466,reddit_eli5,1,1,True,True,False
 16469,reddit_eli5,1,1,True,True,False
 16471,reddit_eli5,1,1,True,True,False
@@ -3353,7 +3353,7 @@ topic_id,source,original_prediction,edited_prediction,original_detected_as_ai,ed
 17765,open_qa,1,1,True,True,False
 17768,open_qa,1,1,True,True,False
 17768,open_qa,0,0,False,False,False
-17768,open_qa,1,1,True,True,False
+17768,open_qa,1,0,True,False,True
 17769,open_qa,1,1,True,True,False
 17769,open_qa,1,1,True,True,False
 17769,open_qa,1,1,True,True,False
@@ -3611,7 +3611,7 @@ topic_id,source,original_prediction,edited_prediction,original_detected_as_ai,ed
 18283,open_qa,1,1,True,True,False
 18286,open_qa,0,0,False,False,False
 18286,open_qa,1,1,True,True,False
-18286,open_qa,1,1,True,True,False
+18286,open_qa,1,0,True,False,True
 18293,open_qa,1,1,True,True,False
 18293,open_qa,1,1,True,True,False
 18293,open_qa,1,1,True,True,False
@@ -3645,7 +3645,7 @@ topic_id,source,original_prediction,edited_prediction,original_detected_as_ai,ed
 18382,wiki_csai,1,1,True,True,False
 18386,wiki_csai,1,1,True,True,False
 18387,wiki_csai,1,1,True,True,False
-18394,wiki_csai,1,1,True,True,False
+18394,wiki_csai,1,0,True,False,True
 18396,wiki_csai,1,1,True,True,False
 18398,wiki_csai,1,1,True,True,False
 18401,wiki_csai,1,1,True,True,False
@@ -4387,7 +4387,7 @@ topic_id,source,original_prediction,edited_prediction,original_detected_as_ai,ed
 21718,finance,1,1,True,True,False
 21724,finance,1,1,True,True,False
 21732,finance,1,1,True,True,False
-21733,finance,1,1,True,True,False
+21733,finance,1,0,True,False,True
 21738,finance,1,1,True,True,False
 21739,finance,1,1,True,True,False
 21740,finance,1,1,True,True,False
@@ -4489,7 +4489,7 @@ topic_id,source,original_prediction,edited_prediction,original_detected_as_ai,ed
 22164,finance,1,1,True,True,False
 22166,finance,1,1,True,True,False
 22172,finance,1,1,True,True,False
-22172,finance,1,1,True,True,False
+22172,finance,1,0,True,False,True
 22174,finance,1,1,True,True,False
 22174,finance,1,1,True,True,False
 22180,finance,1,1,True,True,False
@@ -4665,7 +4665,7 @@ topic_id,source,original_prediction,edited_prediction,original_detected_as_ai,ed
 22944,finance,1,1,True,True,False
 22945,finance,1,1,True,True,False
 22946,finance,1,1,True,True,False
-22947,finance,1,0,True,False,True
+22947,finance,1,1,True,True,False
 22948,finance,1,1,True,True,False
 22955,finance,1,1,True,True,False
 22956,finance,1,1,True,True,False
