@@ -1,0 +1,135 @@
+{
+  "experiment": "Extended paired robustness evaluation",
+  "train_passages": 60955,
+  "train_topics": 17528,
+  "held_out_topics": 4383,
+  "topic_overlap": 0,
+  "paired_questions": 300,
+  "metrics": [
+    {
+      "condition": "Original AI",
+      "accuracy": 0.9883333333,
+      "ai_precision": 0.9966101695,
+      "ai_recall": 0.98,
+      "ai_f1": 0.9882352941,
+      "false_positive_rate": 0.0033333333,
+      "TN": 299,
+      "FP": 1,
+      "FN": 6,
+      "TP": 294,
+      "ai_passages_changed": 0,
+      "recall_ci_low": 0.9570603792,
+      "recall_ci_high": 0.9908023684
+    },
+    {
+      "condition": "Legacy phrase-removal (existing)",
+      "accuracy": 0.9883333333,
+      "ai_precision": 0.9966101695,
+      "ai_recall": 0.98,
+      "ai_f1": 0.9882352941,
+      "false_positive_rate": 0.0033333333,
+      "TN": 299,
+      "FP": 1,
+      "FN": 6,
+      "TP": 294,
+      "ai_passages_changed": 0,
+      "recall_ci_low": 0.9570603792,
+      "recall_ci_high": 0.9908023684
+    },
+    {
+      "condition": "Verified deterministic light edit",
+      "accuracy": 0.9833333333,
+      "ai_precision": 0.9965753425,
+      "ai_recall": 0.97,
+      "ai_f1": 0.9831081081,
+      "false_positive_rate": 0.0033333333,
+      "TN": 299,
+      "FP": 1,
+      "FN": 9,
+      "TP": 291,
+      "ai_passages_changed": 104,
+      "recall_ci_low": 0.9439774609,
+      "recall_ci_high": 0.9841381462
+    },
+    {
+      "condition": "T5 semantic paraphrase",
+      "accuracy": 0.8966666667,
+      "ai_precision": 0.9958333333,
+      "ai_recall": 0.7966666667,
+      "ai_f1": 0.8851851852,
+      "false_positive_rate": 0.0033333333,
+      "TN": 299,
+      "FP": 1,
+      "FN": 61,
+      "TP": 239,
+      "ai_passages_changed": 300,
+      "recall_ci_low": 0.7475056887,
+      "recall_ci_high": 0.8383261484
+    },
+    {
+      "condition": "Truncation control",
+      "accuracy": 0.945,
+      "ai_precision": 0.9962825279,
+      "ai_recall": 0.8933333333,
+      "ai_f1": 0.9420035149,
+      "false_positive_rate": 0.0033333333,
+      "TN": 299,
+      "FP": 1,
+      "FN": 32,
+      "TP": 268,
+      "ai_passages_changed": 299,
+      "recall_ci_low": 0.8532967117,
+      "recall_ci_high": 0.923424151
+    }
+  ],
+  "paired_tests": [
+    {
+      "comparison": "Legacy phrase-removal (existing)",
+      "n": 300,
+      "detected_to_missed": 0,
+      "missed_to_detected": 0,
+      "p": 1
+    },
+    {
+      "comparison": "Verified deterministic light edit",
+      "n": 300,
+      "detected_to_missed": 3,
+      "missed_to_detected": 0,
+      "p": 0.25
+    },
+    {
+      "comparison": "T5 semantic paraphrase",
+      "n": 300,
+      "detected_to_missed": 57,
+      "missed_to_detected": 2,
+      "p": 6.144391e-15
+    },
+    {
+      "comparison": "Truncation control",
+      "n": 300,
+      "detected_to_missed": 26,
+      "missed_to_detected": 0,
+      "p": 2.980232e-8
+    },
+    {
+      "comparison": "T5 paraphrase vs truncation control",
+      "n": 300,
+      "detected_to_missed": 38,
+      "missed_to_detected": 9,
+      "p": 0.00002490403
+    }
+  ],
+  "length_analysis": {
+    "mean_paraphrase_to_original_word_ratio": 0.5609093376553326,
+    "median_paraphrase_to_original_word_ratio": 0.5633361482732566,
+    "under_60_percent_original_words": 181,
+    "legacy_phrase_edit_changed_passages": 0,
+    "deterministic_light_edit_changed_passages": 104,
+    "truncation_changed_passages": 299,
+    "truncation_word_count_mismatches": 1,
+    "shorter_original_left_unchanged_topic_id": "11934",
+    "note": "Prefix truncation to paraphrase whitespace-word count; if original is shorter than paraphrase it remains unchanged. Compression control, not semantic-preservation control.",
+    "mean_truncation_to_original_word_ratio": 0.560694,
+    "truncation_control_note": "Original prefix truncated to paraphrase whitespace-word count when original is longer; if original is shorter, it is left unchanged. This is a compression control, not a semantic-preservation control."
+  }
+}

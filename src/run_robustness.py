@@ -112,7 +112,7 @@ def main():
         )
 
     print("=" * 65)
-    print("AI TEXT DETECTION: CONTROLLED EDIT ROBUSTNESS TEST")
+    print("AI TEXT DETECTION: DETERMINISTIC SURFACE-EDIT TEST")
     print("=" * 65)
 
     df = pd.read_csv(DATA_PATH)

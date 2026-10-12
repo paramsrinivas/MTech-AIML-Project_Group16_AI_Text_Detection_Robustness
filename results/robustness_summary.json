@@ -11,5 +11,6 @@
   "edited_ai_detection_rate": 0.9802379511998387,
   "ai_detection_rate_change_percentage_points": -0.3428110506150439,
   "fraction_of_ai_predictions_changed": 0.0034281105061504335,
-  "edit_method": "Deterministic whitespace normalization, punctuation spacing normalization, and removal of one matching opening discourse phrase from a small predefined list. No semantic paraphrasing."
+  "changed_ai_predictions": 17,
+  "edit_method": "Whitespace normalization and at most one deterministic discourse-marker substitution from a predefined list (e.g. However -> Nevertheless). This is distinct from the opening-phrase removal used in the paired semantic-paraphrase pilot; it is not semantic paraphrasing."
 }
