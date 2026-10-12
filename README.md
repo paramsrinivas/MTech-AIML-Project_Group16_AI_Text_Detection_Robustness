@@ -5,27 +5,15 @@
 
 ## Project overview
 
-This project tests whether a machine-learning classifier can distinguish human-written passages from AI-generated passages after the wording of the AI text has been changed.
+This project evaluates a TF-IDF + LinearSVC classifier trained to distinguish human-written passages from AI-generated passages in the English HC3 dataset. It examines original AI text, a phrase-removal surface-edit condition, a separate connective-substitution condition, and generated semantic paraphrases.
 
-We used the HC3 dataset and evaluated a TF-IDF text representation with a LinearSVC classifier. The evaluation compared original AI text, surface-edited text, and semantically paraphrased text against human-written passages.
+The central question is how this detector behaves under these specific text transformations. The results do not establish how all AI detectors perform.
 
-The main question was whether changes in wording would affect the classifier's ability to recognize AI-generated text.
+## Main paired evaluation
 
-## Method
+The main evaluation uses 300 held-out question pairs. Each condition contains 300 human passages and 300 AI passages, and the same human controls are reused across conditions. The detector is trained on original training text only. The topic-grouped split uses random seed 42 and has no question overlap between training and test data.
 
-The classifier uses word-level TF-IDF features with a LinearSVC model. The experiment evaluates the same task under three text conditions:
-
-- **Original:** AI-generated passages in their original form.
-- **Surface-edited:** AI passages with surface-level changes.
-- **Semantic paraphrase:** AI passages rewritten by a paraphrasing process.
-
-The model was trained on the original training data. The held-out evaluation used 300 question pairs, with 300 human passages and 300 AI passages per condition.
-
-The evaluation reports accuracy, AI precision, AI recall, F1 score, false-positive rate, and confusion matrices.
-
-## Results
-
-| Metric | Original AI | Surface-edited | Semantic paraphrase |
+| Metric | Original AI | Phrase-removal surface edit | Semantic paraphrase |
 |---|---:|---:|---:|
 | Accuracy | 98.83% | 98.83% | 89.67% |
 | AI precision | 99.66% | 99.66% | 99.58% |
@@ -33,23 +21,35 @@ The evaluation reports accuracy, AI precision, AI recall, F1 score, false-positi
 | AI F1 score | 98.82% | 98.82% | 88.52% |
 | False-positive rate | 0.33% | 0.33% | 0.33% |
 
-AI recall decreased by 18.33 percentage points after semantic paraphrasing. The number of AI passages classified as human increased from 6 to 61.
+AI recall was 18.33 percentage points lower for the generated paraphrases than for the original AI passages; false negatives increased from 6 to 61. This is an observed difference for this sample and generation pipeline, not proof that meaning-preserving paraphrasing alone caused the difference. Paraphrases were often shorter, and some changed facts or omitted information. A length-matched truncation control is available in `src/analyze_paraphrase_length.py`; run it before interpreting the semantic condition causally.
 
-These results suggest that semantic rewriting affected this classifier more than the surface edits used in this experiment. They do not establish that all AI detectors behave the same way.
+**Important surface-edit qualification:** in the main paired evaluation, the phrase-removal transformation changed 0 of the 300 AI passages. Its identical metrics therefore do not demonstrate robustness to effective surface changes. The supplementary experiment below uses a different, deterministic connective-substitution edit.
+
+## Supplementary connective-substitution experiment
+
+The separate `src/run_robustness.py` experiment applies whitespace/punctuation normalization and, where possible, substitutes one discourse connective (for example, “However” with “Nevertheless”). It evaluates 4,959 held-out original AI passages, their edited counterparts, and 10,198 human passages as separate class-specific groups.
+
+| Evaluation group | Passages | Accuracy | AI recall | False-positive rate |
+|---|---:|---:|---:|---:|
+| Original AI | 4,959 | 98.37% | 98.37% | Not applicable |
+| Connective-edited AI | 4,959 | 98.02% | 98.02% | Not applicable |
+| Human | 10,198 | 99.26% | Not applicable | 0.74% |
+
+These are class-specific groups, not balanced human-versus-AI evaluations. False-positive rate is not meaningful for AI-only groups, and AI recall is not meaningful for the human-only group. The paired prediction file records how often the model's prediction changed between original and edited versions.
 
 ## Repository structure
 
-- `data/` — HC3 dataset files and data notes.
-- `notebooks/` — experiment notebook.
-- `src/` — data preparation, model, evaluation, and robustness scripts.
-- `results/` — predictions, metrics, summaries, and figures.
+- `data/` — prepared HC3 dataset and data notes.
+- `notebooks/` — exploratory notebook.
+- `src/` — preparation, training, evaluation, and robustness scripts.
+- `results/` — saved predictions, metrics, summaries, and figures.
 - `reports/` — final written report.
-- `presentation/` — final presentation slides.
+- `presentation/` — final presentation.
 - `requirements.txt` — Python dependencies.
 
-## Environment setup
+## Environment and reproduction
 
-The project was developed with Python 3.12 on macOS. From the repository root, create and activate a virtual environment and install the dependencies:
+Developed with Python 3.12 on macOS. From the repository root:
 
 ```bash
 python3 -m venv .venv
@@ -58,86 +58,46 @@ python -m pip install --upgrade pip
 python -m pip install -r requirements.txt
 ```
 
-### Reproduce the experiments
+Run stages from the repository root so relative paths resolve correctly.
 
-Run the commands from the repository root, in the order shown below.
+1. Prepare the dataset:
+   ```bash
+   python src/prepare_hc3.py
+   ```
+   This creates `data/hc3_original.csv`; internet access may be needed to download HC3.
+2. Run baseline models:
+   ```bash
+   python src/run_experiment.py
+   ```
+3. Run the supplementary connective-edit experiment:
+   ```bash
+   python src/run_robustness.py
+   ```
+4. Generate semantic paraphrases (model download and substantial runtime required on first run):
+   ```bash
+   python src/generate_paraphrases.py
+   ```
+5. Evaluate the paired paraphrase sample:
+   ```bash
+   python src/evaluate_final.py
+   ```
+6. Evaluate the length-matched truncation control and paired uncertainty:
+   ```bash
+   python src/analyze_paraphrase_length.py
+   ```
 
-**1. Prepare the dataset**
-
-```bash
-python src/prepare_hc3.py
-```
-
-This creates `data/hc3_original.csv`. Dataset preparation requires internet access to retrieve the HC3 dataset if it is not already cached.
-
-**2. Run the baseline experiment**
-
-```bash
-python src/run_experiment.py
-```
-
-This trains and evaluates the baseline classifiers and saves their metrics, predictions, split manifest, and figure under `results/`.
-
-**3. Run the surface-edit robustness experiment**
-
-```bash
-python src/run_robustness.py
-```
-
-This evaluates held-out human passages, original AI passages, and surface-edited AI passages.
-
-**4. Generate semantic paraphrases**
-
-```bash
-python src/generate_paraphrases.py
-```
-
-This uses `humarin/chatgpt_paraphraser_on_T5_base` and writes `results/semantic_paraphrases.csv`. The first run requires internet access to download the model and tokenizer. Generation can take substantial time and may require considerable memory.
-
-**5. Evaluate semantic paraphrases**
-
-```bash
-python src/evaluate_final.py
-```
-
-This reconstructs the grouped train/test split, trains the detector on original training text, and evaluates the saved paired sample. It writes the final metrics, predictions, summary, and figures under `results/`.
-
-**Reproduction notes**
-
-- Run commands from the repository root so relative paths resolve correctly.
-- The experiments use a fixed random seed of 42 and group questions by `topic_id` to prevent question overlap between training and test data.
-- The semantic paraphrase evaluation uses a 300-question paired sample. Its results should not be compared directly with the larger supplementary surface-edit evaluation.
-- The paraphrase-generation step is separate from evaluation. If the saved paraphrases already exist, do not rerun generation unnecessarily.
-- Re-running stages may overwrite generated files. Preserve a copy of validated outputs before rerunning experiments.
-
-To inspect the saved results without rerunning the experiments, open the CSV files and figures under `results/`.
-## Supplementary robustness experiment
-
-The project also includes a separate test of lightweight surface edits in
-`results/robustness_condition_metrics.csv`. In this experiment, the detector
-was trained on original training passages and evaluated on held-out human
-passages, original AI passages, and edited copies of the AI passages.
-
-| Evaluation group | Passages | Accuracy | AI recall | False-positive rate |
-|---|---:|---:|---:|---:|
-| Original AI | 4,959 | 98.37% | 98.37% | Not applicable |
-| Surface-edited AI | 4,959 | 98.35% | 98.35% | Not applicable |
-| Human | 10,198 | 99.26% | Not applicable | 0.74% |
-
-These are class-specific groups, not three balanced evaluations containing
-both human and AI passages. Consequently, metrics such as false-positive
-rate for AI-only groups and AI recall for the human-only group are not
-meaningful in this table. These results should not be compared directly
-with the main paired evaluation above.
+The generation step uses `humarin/chatgpt_paraphraser_on_T5_base`. The analysis script uses the same grouped split and detector settings as the main paired evaluation. Do not regenerate paraphrases unless needed; generation settings and library/model revisions can affect outputs. Inspect the generated text for meaning changes before interpreting it as a semantic robustness test.
 
 ## Limitations
 
-The evaluation covers one dataset, one classical classifier, and the text produced by the paraphrasing process used in this project. Manual inspection found some paraphrases that changed facts or omitted information. Therefore, the results measure performance on these generated outputs, not only on meaning-preserving paraphrases.
-
-AI-text detectors can produce both false positives and false negatives. Their predictions should not be treated as proof of authorship.
+- The study uses one dataset and one classical detector; results may not generalize to other datasets, domains, or detectors.
+- HC3 source representation is imbalanced, so aggregate metrics are strongly influenced by the dominant sources. Small source-specific groups are unstable.
+- Paraphrases are generated model outputs, not verified meaning-preserving rewrites. Length/compression and semantic changes are potential confounders.
+- A single grouped holdout is used; confidence intervals and paired tests quantify uncertainty within this sample but do not replace external validation.
+- Detector outputs are not proof of authorship.
 
 ## Main deliverables
 
 - `reports/Assignment16_Final_Report.docx`
 - `presentation/Group16_AI_Text_Detection_Robustness.pptx`
-- Evaluation tables and figures under `results/`
+- Metrics, predictions, and figures under `results/`
