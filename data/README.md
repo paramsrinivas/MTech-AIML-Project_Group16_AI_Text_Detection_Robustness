@@ -25,6 +25,10 @@ The experiments use the English portion of **HC3 (Human ChatGPT Comparison Corpu
 
 The main scripts use a question/topic-grouped `GroupShuffleSplit` with seed 42 and test size 0.20. The paired pilot selects up to 300 held-out AI passages that meet the model tokenizer limit of 220 tokens and joins each with a human passage from the same question. This eligibility filter limits how broadly the pilot sample can be generalized.
 
+## Extended paired evaluation
+
+`src/run_extended_evaluation.py` evaluates five paired conditions using the same 300 held-out question topics: original AI, the legacy phrase-removal variant, a deterministic discourse-marker light edit, T5 semantic paraphrase, and a truncation/compression control. It writes extended metrics, exact paired McNemar tests, per-passage predictions, word-length analysis, and a JSON summary under `results/`. The truncation control cuts the original AI passage to the paraphrase's whitespace-word count when the original is longer; for one pair (topic 11934), the original has 31 words and the paraphrase has 33, so the original is left unchanged. This is disclosed in the summary and means one length mismatch remains.
+
 ## Interpretation
 
 Generated paraphrases can omit details, alter facts, and be shorter than their source. Detector performance on them reflects both the paraphrasing process and resulting text characteristics; it does not isolate meaning-preserving semantic rewriting alone. The supplementary deterministic-edit experiment is a different sample and should be reported separately.
