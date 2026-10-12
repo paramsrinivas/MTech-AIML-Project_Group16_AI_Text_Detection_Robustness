@@ -73,11 +73,12 @@ python src/run_experiment.py
 python src/run_robustness.py
 python src/generate_paraphrases.py
 python src/evaluate_final.py
+python src/run_extended_evaluation.py
 ```
 
 The preparation and model-generation steps need internet access. The paraphrase model is `humarin/chatgpt_paraphraser_on_T5_base`; first-time downloads and CPU/MPS inference may take time. If validated paraphrases already exist, preserve them and skip generation unless intentionally regenerating the sample.
 
-The notebook is a results-inspection/illustration companion, not the canonical end-to-end experiment runner. The scripts in `src/` are the reproducibility entry points. Outputs are written under `results/`.
+The notebook is a results-inspection/illustration companion, not the canonical end-to-end experiment runner. The scripts in `src/` are the reproducibility entry points. Outputs are written under `results/`. The extended paired evaluation writes `extended_condition_metrics.csv`, `extended_paired_tests.csv`, `extended_length_analysis.csv`, `extended_predictions.csv`, and `extended_evaluation_summary.json` under `results/`.
 
 ## Limitations
 
