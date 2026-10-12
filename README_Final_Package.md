@@ -4,7 +4,7 @@
 
 **AI-Text Detection Robustness**
 
-The project evaluates a TF-IDF + LinearSVC detector on original HC3 AI passages, two distinct surface-edit procedures, and generated semantic paraphrases. The experiments are specific to this dataset, model, and transformation pipeline.
+This project evaluates a TF-IDF + LinearSVC classifier on the HC3 dataset under original AI text, a phrase-removal variant, and generated semantic paraphrases. A separate larger experiment tests deterministic discourse-marker substitutions.
 
 ## Deliverables
 
@@ -12,46 +12,42 @@ The project evaluates a TF-IDF + LinearSVC detector on original HC3 AI passages,
 - **Presentation:** `presentation/Group16_AI_Text_Detection_Robustness.pptx`
 - **Code:** `src/`
 - **Metrics, predictions, and figures:** `results/`
-- **Dataset and data notes:** `data/`
-- **Exploratory notebook:** `notebooks/experiment.ipynb`
+- **Dataset notes:** `data/README.md`
+- **Setup and reproduction instructions:** `README.md`
 
-The notebook is an exploratory companion, not the canonical end-to-end runner. Use the scripts and the reproduction sequence in `README.md` to regenerate experiment outputs.
+The notebook is an inspection/illustration companion. Use the scripts in `src/` to reproduce the reported experiments.
 
-## Main paired result
+## Main paired pilot
 
-The main paired evaluation used 300 held-out question pairs, with 300 human passages and 300 AI passages per condition.
+The evaluation uses 300 held-out question pairs; each condition contains 300 human controls and 300 AI passages.
 
-| Metric | Original AI | Phrase-removal surface edit | Semantic paraphrase |
+| Metric | Original AI | Phrase-removal variant | Semantic paraphrase |
 |---|---:|---:|---:|
 | Accuracy | 98.83% | 98.83% | 89.67% |
 | AI recall | 98.00% | 98.00% | 79.67% |
 | AI F1 score | 98.82% | 98.82% | 88.52% |
 | False-positive rate | 0.33% | 0.33% | 0.33% |
 
-AI recall decreased by 18.33 percentage points for the paraphrase condition, and false negatives increased from 6 to 61. The phrase-removal edit changed 0 of the 300 AI passages, so identical metrics in that condition are not evidence of successful robustness testing. The semantic paraphrases may be shorter and may alter meaning, so the recall difference cannot be attributed to semantic rewriting alone.
+Recall drops by 18.33 percentage points for generated paraphrases (294/300 original AI passages detected versus 239/300 paraphrases detected); false negatives increase from 6 to 61.
 
-## Supplementary connective-substitution result
+**Interpretation limit:** the phrase-removal function changed 0 of the 300 sampled passages, so identical metrics are not evidence that the detector withstands effective surface edits. The semantic paraphraser sometimes shortens passages, omits information, or changes facts; the result cannot isolate semantic rewriting from length/compression and content changes.
 
-The separate `src/run_robustness.py` experiment applies whitespace/punctuation normalization and one connective substitution where possible.
+## Supplementary edit experiment
 
-| Evaluation group | Passages | Accuracy | AI recall | False-positive rate |
-|---|---:|---:|---:|---:|
-| Original AI | 4,959 | 98.37% | 98.37% | Not applicable |
-| Connective-edited AI | 4,959 | 98.02% | 98.02% | Not applicable |
-| Human | 10,198 | 99.26% | Not applicable | 0.74% |
+The separate `src/run_robustness.py` experiment uses whitespace normalization and at most one deterministic discourse-marker substitution. It is not the same edit procedure as the paired pilot.
 
-These are class-specific groups, not balanced evaluations. Read this table separately from the main paired evaluation.
+| Evaluation group | Passages | Accuracy / AI recall | False-positive rate |
+|---|---:|---:|---:|
+| Original AI-only group | 4,959 | 98.37% | Not applicable |
+| Edited AI-only group | 4,959 | 98.02% | Not applicable |
+| Human-only group | 10,198 | 99.26% accuracy | 0.74% |
+
+The supplementary groups contain only one class each, so they are not balanced human-versus-AI evaluations. In paired AI predictions, 17 of 4,959 predictions changed and the AI detection rate fell by 0.34 percentage points.
 
 ## Reproduction
 
-Follow the setup and run order in `README.md`. After the existing paraphrase-generation and paired-evaluation steps, run:
-
-```bash
-python src/analyze_paraphrase_length.py
-```
-
-This creates a truncation-control comparison and paired uncertainty outputs. Its results must be generated in the target environment before any new metrics are quoted. Keep the original paraphrase file and existing result outputs when comparing runs.
+See `README.md` for environment setup and the full run order. The semantic-paraphrase stage downloads `humarin/chatgpt_paraphraser_on_T5_base` on first use. Preserve validated outputs before rerunning stages that overwrite files.
 
 ## Limitations
 
-The study covers one dataset and one classical classifier. The HC3 source distribution is imbalanced, and the paraphraser can compress text, omit information, or change facts. The results describe the observed pipeline rather than all detectors or verified meaning-preserving paraphrases. Detector predictions are not proof of authorship.
+The results cover one dataset, one principal classifier, one grouped split, and specific editing/generation procedures. The paraphrases are not verified as meaning-preserving, and the source distribution is dominated by Reddit ELI5 examples. Do not generalize these results to all detectors or treat a detector prediction as proof of authorship.
