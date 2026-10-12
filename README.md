@@ -29,6 +29,24 @@ AI recall is 18.33 percentage points lower for generated paraphrases than for or
 
 **Important qualification:** the phrase-removal function used in the paired pilot removes a matching opening phrase from a small list (for example, “Certainly,” or “Sure,”). In the saved sample it changed 0 of 300 passages, so identical metrics are expected and do not demonstrate robustness to effective edits. The semantic paraphraser may shorten passages, omit information, or alter facts. These results therefore do not isolate the effect of meaning-preserving rewriting from length/compression or content changes.
 
+## Extended paired robustness evaluation
+
+The corrected extended evaluation adds a deterministic discourse-marker edit and a length/compression control. Each condition has 300 human controls and 300 AI passages from the same 300 held-out topics.
+
+| Condition | Accuracy | AI precision | AI recall | AI F1 | FPR | AI false negatives |
+|---|---:|---:|---:|---:|---:|---:|
+| Original AI | 98.83% | 99.66% | 98.00% | 98.82% | 0.33% | 6 |
+| Legacy phrase-removal (existing) | 98.83% | 99.66% | 98.00% | 98.82% | 0.33% | 6 |
+| Verified deterministic light edit | 98.33% | 99.66% | 97.00% | 98.31% | 0.33% | 9 |
+| T5 semantic paraphrase | 89.67% | 99.58% | 79.67% | 88.52% | 0.33% | 61 |
+| Truncation control | 94.50% | 99.63% | 89.33% | 94.29% | 0.33% | 32 |
+
+Paired exact McNemar tests versus original AI predictions found no significant change for the deterministic light edit (3 detections lost, 0 gained; p=0.25), while the T5 paraphrase condition lost 57 detections and gained 2 (p=6.14e-15). The truncation control lost 26 detections and gained 0 (p=2.98e-8). T5 paraphrases also differed significantly from the truncation control (38 detections lost, 9 gained; p=2.49e-5).
+
+**Length-control qualification:** T5 paraphrases averaged 56.09% of original word count; 181/300 were under 60% of original length. Prefix truncation changed 299/300 original passages. For one topic (11934), the original was shorter than the paraphrase (31 versus 33 whitespace words), so it was left unchanged. Truncation is only a compression control; it removes content and is not a meaning-preserving transformation. The significant T5-versus-truncation difference is suggestive but does not isolate semantics from content loss or paraphrase quality.
+
+The light-edit rule changed 104/300 passages and recall was 97.00%; this small paired change was not statistically significant. The legacy phrase-removal variant changed 0/300 passages and its unchanged result is not evidence of robustness.
+
 ## Supplementary edit experiment
 
 `src/run_robustness.py` is a separate, larger held-out experiment. Its edit procedure normalizes whitespace and makes at most one deterministic discourse-marker substitution (for example, “However,” to “Nevertheless,”). It is not the same transformation as the phrase-removal function in the paired pilot.
