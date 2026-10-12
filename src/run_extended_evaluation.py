@@ -19,32 +19,35 @@ def wc(x):
     return len(str(x).split())
 
 def truncate_words(text, n):
-    matches = list(re.finditer(r"\\S+", str(text)))
-    if not matches or len(matches) <= max(1, int(n)):
-        return str(text)
-    return str(text)[:matches[max(1, int(n))-1].end()].rstrip()
+    """Truncate a prefix to n whitespace-separated words; do not pad shorter text."""
+    text = str(text)
+    target = max(1, int(n))
+    matches = list(re.finditer(r"\S+", text))
+    if not matches or len(matches) <= target:
+        return text
+    return text[:matches[target - 1].end()].rstrip()
 
 def light_edit(text):
     """Deterministic discourse-marker substitution; not guaranteed meaning-preserving."""
     original = str(text)
-    edited = re.sub(r"[ \\t]+", " ", original)
-    edited = re.sub(r" *\\n *", "\\n", edited)
+    edited = re.sub(r"[ \t]+", " ", original)
+    edited = re.sub(r" *\n *", "\n", edited)
     rules = [
-        (r"\\bIn addition,\\s*", "Additionally, "),
-        (r"\\bAdditionally,\\s*", "Also, "),
-        (r"\\bFor example,\\s*", "For instance, "),
-        (r"\\bFor instance,\\s*", "For example, "),
-        (r"\\bHowever,\\s*", "Nevertheless, "),
-        (r"\\bTherefore,\\s*", "Thus, "),
-        (r"\\bIn conclusion,\\s*", "To conclude, "),
-        (r"\\bOn the other hand,\\s*", "Conversely, "),
+        (r"\bIn addition,\s*", "Additionally, "),
+        (r"\bAdditionally,\s*", "Also, "),
+        (r"\bFor example,\s*", "For instance, "),
+        (r"\bFor instance,\s*", "For example, "),
+        (r"\bHowever,\s*", "Nevertheless, "),
+        (r"\bTherefore,\s*", "Thus, "),
+        (r"\bIn conclusion,\s*", "To conclude, "),
+        (r"\bOn the other hand,\s*", "Conversely, "),
     ]
-    for pat, repl in rules:
-        changed = re.sub(pat, repl, edited, count=1, flags=re.I)
-        if changed != edited:
-            edited = changed
+    for pattern, replacement in rules:
+        updated = re.sub(pattern, replacement, edited, count=1, flags=re.IGNORECASE)
+        if updated != edited:
+            edited = updated
             break
-    return re.sub(r"\\s+([,.!?;:])", r"\\1", edited).strip() or original
+    return re.sub(r"\s+([,.!?;:])", r"\1", edited).strip() or original
 
 def wilson(k, n, z=1.959963984540054):
     if not n: return [float("nan"), float("nan")]
@@ -145,7 +148,10 @@ def main():
         "under_60_percent_original_words":int(((para/orig.replace(0,np.nan))<.6).sum()),
         "legacy_phrase_edit_changed_passages":int((pairs.ai_surface_edited.astype(str)!=pairs.ai_original.astype(str)).sum()),
         "deterministic_light_edit_changed_passages":int((pairs.ai_light_edited.astype(str)!=pairs.ai_original.astype(str)).sum()),
-        "truncation_control_note":"Original prefix truncated to paraphrase whitespace-word count; compression control, not semantic-preservation control."}}
+        "truncation_control_note":"Original prefix truncated to paraphrase whitespace-word count when original is longer; if original is shorter, it is left unchanged. This is a compression control, not a semantic-preservation control.",
+        "truncation_word_count_mismatches":int((trunc != para).sum()),
+        "truncation_changed_passages":int((pairs.ai_truncated.astype(str)!=pairs.ai_original.astype(str)).sum()),
+        "mean_truncation_to_original_word_ratio":float((trunc/orig.replace(0,np.nan)).mean())}}
     (OUT/"extended_evaluation_summary.json").write_text(json.dumps(summary,indent=2,allow_nan=True))
     try:
         import matplotlib.pyplot as plt
