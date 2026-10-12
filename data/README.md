@@ -1,34 +1,34 @@
 # Data Description
 
-## Overview
+## Dataset
 
-The project uses the English HC3 (Human ChatGPT Comparison Corpus) dataset, which contains questions, human-written answers, ChatGPT-generated answers, and source information. The dataset is loaded from Hugging Face using `Hello-SimpleAI/HC3`, configuration `default`, revision `refs/convert/parquet`.
+The experiments use the English portion of **HC3 (Human ChatGPT Comparison Corpus)** from Hugging Face dataset `Hello-SimpleAI/HC3`, using the `default` configuration and `refs/convert/parquet` revision in the preparation script.
 
 ## Files
 
-- `hc3_original.csv` — prepared original human and AI passages.
-- `sample_data.csv` — small sample used for inspection or testing.
-- `../results/semantic_paraphrases.csv` — generated paraphrases and paired human/original AI text used in the main robustness evaluation.
+- `hc3_original.csv` — prepared human and original AI passages.
+- `sample_data.csv` — sample data for inspection or testing.
+- `../results/semantic_paraphrases.csv` — paired pilot sample and generated paraphrases.
 
-## Data preparation
+## Preparation
 
-`src/prepare_hc3.py` loads HC3, extracts the question, human answer, ChatGPT answer, and source, performs whitespace cleaning, filters passages shorter than 40 characters, labels human passages `0` and original AI passages `1`, and creates stable identifiers using SHA-256 hashes.
+`src/prepare_hc3.py` loads HC3, extracts question/answer and source information, normalizes whitespace, filters passages shorter than 40 characters, assigns label 0 to human text and label 1 to AI text, and creates stable identifiers/hashes. The output is `data/hc3_original.csv`.
 
-The prepared dataset is saved to `data/hc3_original.csv`. Edited and paraphrased text is generated in separate experiment stages.
+## Editing conditions are not interchangeable
 
-## Text variations
+1. **Original AI:** original ChatGPT answers.
+2. **Paired-pilot phrase-removal variant:** `src/generate_paraphrases.py` normalizes whitespace and removes one matching opening phrase from a short list (such as “Certainly,” or “Sure,”). In the saved 300-passage sample, this function changed 0 passages. Its identical metrics therefore do not establish robustness to effective edits.
+3. **Supplementary deterministic edit:** `src/run_robustness.py` normalizes whitespace and applies at most one discourse-marker substitution (such as “However,” to “Nevertheless,”) where a listed phrase matches. This is a distinct transformation.
+4. **Semantic paraphrase:** `src/generate_paraphrases.py` uses `humarin/chatgpt_paraphraser_on_T5_base`. These are generated outputs, not verified meaning-preserving rewrites.
 
-1. **Original AI text:** ChatGPT-generated answers from HC3.
-2. **Phrase-removal surface edit (main paired experiment):** `src/generate_paraphrases.py` normalizes whitespace and punctuation and removes one matching introductory phrase from a short list, such as “Certainly,” or “Sure,”. In the saved 300-passage sample this transformation changed 0 passages.
-3. **Connective-substitution edit (supplementary experiment):** `src/run_robustness.py` normalizes whitespace/punctuation and, where possible, substitutes one discourse connective, such as “However” with “Nevertheless.” This is a separate transformation from the phrase-removal edit above.
-4. **Semantic paraphrases:** `src/generate_paraphrases.py` uses the Hugging Face Transformers model `humarin/chatgpt_paraphraser_on_T5_base` to generate alternate text. The configured seed is 42, test size is 20%, sample size is 300, and maximum source length is 220 tokenizer tokens.
+## Split and sample
 
-## Evaluation notes
+The main scripts use a question/topic-grouped `GroupShuffleSplit` with seed 42 and test size 0.20. The paired pilot selects up to 300 held-out AI passages that meet the model tokenizer limit of 220 tokens and joins each with a human passage from the same question. This eligibility filter limits how broadly the pilot sample can be generalized.
 
-The main detector is trained only on original training passages. Question IDs are grouped during train/test splitting to prevent passages from the same question appearing in both sets. The semantic evaluation uses a 300-question paired sample, limited to AI passages no longer than 220 tokens. This eligibility rule restricts the population represented by the results.
+## Interpretation
 
-Generated paraphrases may compress the original text, omit content, or change facts. They are not verified meaning-preserving rewrites. The length-matched truncation control in `src/analyze_paraphrase_length.py` is intended to help assess how much detection loss may be associated with reduced input length; truncation is a diagnostic control and is not a meaning-preserving edit.
+Generated paraphrases can omit details, alter facts, and be shorter than their source. Detector performance on them reflects both the paraphrasing process and resulting text characteristics; it does not isolate meaning-preserving semantic rewriting alone. The supplementary deterministic-edit experiment is a different sample and should be reported separately.
 
 ## Reproducibility
 
-The fixed seed helps make sampling reproducible, but exact generated outputs may depend on package versions, model/tokenizer revisions, generation settings, and hardware. Record those details when reproducing the paraphrase stage. Inspect examples for meaning preservation before drawing causal conclusions.
+The dataset revision, model name, seed, split size, and sample size are defined in the scripts. The preparation and generation stages require internet access on first use. Model output can vary with library versions and runtime settings.
