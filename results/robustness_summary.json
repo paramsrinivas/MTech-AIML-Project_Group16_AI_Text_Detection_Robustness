@@ -11,5 +11,5 @@
   "edited_ai_detection_rate": 0.9802379511998387,
   "ai_detection_rate_change_percentage_points": -0.3428110506150439,
   "fraction_of_ai_predictions_changed": 0.0034281105061504335,
-  "edit_method": "Deterministic whitespace normalization, punctuation spacing normalization, and removal of one matching opening discourse phrase from a small predefined list. No semantic paraphrasing."
+  "edit_method": "Deterministic whitespace and punctuation normalization, followed by at most one connective substitution (e.g. 'However' to 'Nevertheless') from a predefined list. This is a supplementary surface-edit condition, distinct from phrase removal in the paired paraphrase evaluation; it is not semantic paraphrasing."
 }
