@@ -8,68 +8,78 @@
   "metrics": [
     {
       "condition": "Original AI",
-      "accuracy": 0.988333,
-      "ai_precision": 0.99661,
+      "accuracy": 0.9883333333,
+      "ai_precision": 0.9966101695,
       "ai_recall": 0.98,
-      "ai_f1": 0.98824,
-      "false_positive_rate": 0.003333,
+      "ai_f1": 0.9882352941,
+      "false_positive_rate": 0.0033333333,
       "TN": 299,
       "FP": 1,
       "FN": 6,
       "TP": 294,
-      "ai_passages_changed": 0
+      "ai_passages_changed": 0,
+      "recall_ci_low": 0.9570603792,
+      "recall_ci_high": 0.9908023684
     },
     {
       "condition": "Legacy phrase-removal (existing)",
-      "accuracy": 0.988333,
-      "ai_precision": 0.99661,
+      "accuracy": 0.9883333333,
+      "ai_precision": 0.9966101695,
       "ai_recall": 0.98,
-      "ai_f1": 0.98824,
-      "false_positive_rate": 0.003333,
+      "ai_f1": 0.9882352941,
+      "false_positive_rate": 0.0033333333,
       "TN": 299,
       "FP": 1,
       "FN": 6,
       "TP": 294,
-      "ai_passages_changed": 0
+      "ai_passages_changed": 0,
+      "recall_ci_low": 0.9570603792,
+      "recall_ci_high": 0.9908023684
     },
     {
       "condition": "Verified deterministic light edit",
-      "accuracy": 0.983333,
-      "ai_precision": 0.996575,
+      "accuracy": 0.9833333333,
+      "ai_precision": 0.9965753425,
       "ai_recall": 0.97,
-      "ai_f1": 0.983108,
-      "false_positive_rate": 0.003333,
+      "ai_f1": 0.9831081081,
+      "false_positive_rate": 0.0033333333,
       "TN": 299,
       "FP": 1,
       "FN": 9,
       "TP": 291,
-      "ai_passages_changed": 104
+      "ai_passages_changed": 104,
+      "recall_ci_low": 0.9439774609,
+      "recall_ci_high": 0.9841381462
     },
     {
       "condition": "T5 semantic paraphrase",
-      "accuracy": 0.896667,
-      "ai_precision": 0.995833,
-      "ai_recall": 0.796667,
-      "ai_f1": 0.885185,
-      "false_positive_rate": 0.003333,
+      "accuracy": 0.8966666667,
+      "ai_precision": 0.9958333333,
+      "ai_recall": 0.7966666667,
+      "ai_f1": 0.8851851852,
+      "false_positive_rate": 0.0033333333,
       "TN": 299,
       "FP": 1,
       "FN": 61,
       "TP": 239,
-      "ai_passages_changed": 300
+      "ai_passages_changed": 300,
+      "recall_ci_low": 0.7475056887,
+      "recall_ci_high": 0.8383261484
     },
     {
       "condition": "Truncation control",
       "accuracy": 0.945,
-      "ai_precision": 0.996283,
-      "ai_recall": 0.893333,
-      "ai_f1": 0.942882,
-      "false_positive_rate": 0.003333,
+      "ai_precision": 0.9962825279,
+      "ai_recall": 0.8933333333,
+      "ai_f1": 0.9420035149,
+      "false_positive_rate": 0.0033333333,
       "TN": 299,
       "FP": 1,
       "FN": 32,
       "TP": 268,
-      "ai_passages_changed": 299
+      "ai_passages_changed": 299,
+      "recall_ci_low": 0.8532967117,
+      "recall_ci_high": 0.923424151
     }
   ],
   "paired_tests": [
@@ -118,6 +128,8 @@
     "truncation_changed_passages": 299,
     "truncation_word_count_mismatches": 1,
     "shorter_original_left_unchanged_topic_id": "11934",
-    "note": "Prefix truncation to paraphrase whitespace-word count; if original is shorter than paraphrase it remains unchanged. Compression control, not semantic-preservation control."
+    "note": "Prefix truncation to paraphrase whitespace-word count; if original is shorter than paraphrase it remains unchanged. Compression control, not semantic-preservation control.",
+    "mean_truncation_to_original_word_ratio": 0.560694,
+    "truncation_control_note": "Original prefix truncated to paraphrase whitespace-word count when original is longer; if original is shorter, it is left unchanged. This is a compression control, not a semantic-preservation control."
   }
 }
