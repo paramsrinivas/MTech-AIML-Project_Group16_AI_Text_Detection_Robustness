@@ -1,0 +1,6 @@
+comparison,n_paired_topics,detected_to_missed,missed_to_detected,detection_rate_difference_vs_original,exact_mcnemar_p
+Legacy phrase-removal (existing),300,0,0,0.000000,1.000000
+Verified deterministic light edit,300,3,0,-0.010000,0.250000
+T5 semantic paraphrase,300,57,2,-0.183333,6.144391e-15
+Truncation control,300,26,0,-0.086667,2.980232e-08
+T5 paraphrase vs truncation control,300,38,9,-0.096667,2.490403e-05
