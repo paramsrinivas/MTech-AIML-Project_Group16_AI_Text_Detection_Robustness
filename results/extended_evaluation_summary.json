@@ -1,0 +1,123 @@
+{
+  "experiment": "Extended paired robustness evaluation",
+  "train_passages": 60955,
+  "train_topics": 17528,
+  "held_out_topics": 4383,
+  "topic_overlap": 0,
+  "paired_questions": 300,
+  "metrics": [
+    {
+      "condition": "Original AI",
+      "accuracy": 0.988333,
+      "ai_precision": 0.99661,
+      "ai_recall": 0.98,
+      "ai_f1": 0.98824,
+      "false_positive_rate": 0.003333,
+      "TN": 299,
+      "FP": 1,
+      "FN": 6,
+      "TP": 294,
+      "ai_passages_changed": 0
+    },
+    {
+      "condition": "Legacy phrase-removal (existing)",
+      "accuracy": 0.988333,
+      "ai_precision": 0.99661,
+      "ai_recall": 0.98,
+      "ai_f1": 0.98824,
+      "false_positive_rate": 0.003333,
+      "TN": 299,
+      "FP": 1,
+      "FN": 6,
+      "TP": 294,
+      "ai_passages_changed": 0
+    },
+    {
+      "condition": "Verified deterministic light edit",
+      "accuracy": 0.983333,
+      "ai_precision": 0.996575,
+      "ai_recall": 0.97,
+      "ai_f1": 0.983108,
+      "false_positive_rate": 0.003333,
+      "TN": 299,
+      "FP": 1,
+      "FN": 9,
+      "TP": 291,
+      "ai_passages_changed": 104
+    },
+    {
+      "condition": "T5 semantic paraphrase",
+      "accuracy": 0.896667,
+      "ai_precision": 0.995833,
+      "ai_recall": 0.796667,
+      "ai_f1": 0.885185,
+      "false_positive_rate": 0.003333,
+      "TN": 299,
+      "FP": 1,
+      "FN": 61,
+      "TP": 239,
+      "ai_passages_changed": 300
+    },
+    {
+      "condition": "Truncation control",
+      "accuracy": 0.945,
+      "ai_precision": 0.996283,
+      "ai_recall": 0.893333,
+      "ai_f1": 0.942882,
+      "false_positive_rate": 0.003333,
+      "TN": 299,
+      "FP": 1,
+      "FN": 32,
+      "TP": 268,
+      "ai_passages_changed": 299
+    }
+  ],
+  "paired_tests": [
+    {
+      "comparison": "Legacy phrase-removal (existing)",
+      "n": 300,
+      "detected_to_missed": 0,
+      "missed_to_detected": 0,
+      "p": 1
+    },
+    {
+      "comparison": "Verified deterministic light edit",
+      "n": 300,
+      "detected_to_missed": 3,
+      "missed_to_detected": 0,
+      "p": 0.25
+    },
+    {
+      "comparison": "T5 semantic paraphrase",
+      "n": 300,
+      "detected_to_missed": 57,
+      "missed_to_detected": 2,
+      "p": 6.144391e-15
+    },
+    {
+      "comparison": "Truncation control",
+      "n": 300,
+      "detected_to_missed": 26,
+      "missed_to_detected": 0,
+      "p": 2.980232e-8
+    },
+    {
+      "comparison": "T5 paraphrase vs truncation control",
+      "n": 300,
+      "detected_to_missed": 38,
+      "missed_to_detected": 9,
+      "p": 0.00002490403
+    }
+  ],
+  "length_analysis": {
+    "mean_paraphrase_to_original_word_ratio": 0.5609093376553326,
+    "median_paraphrase_to_original_word_ratio": 0.5633361482732566,
+    "under_60_percent_original_words": 181,
+    "legacy_phrase_edit_changed_passages": 0,
+    "deterministic_light_edit_changed_passages": 104,
+    "truncation_changed_passages": 299,
+    "truncation_word_count_mismatches": 1,
+    "shorter_original_left_unchanged_topic_id": "11934",
+    "note": "Prefix truncation to paraphrase whitespace-word count; if original is shorter than paraphrase it remains unchanged. Compression control, not semantic-preservation control."
+  }
+}
